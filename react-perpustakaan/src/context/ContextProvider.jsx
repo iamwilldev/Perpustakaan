@@ -4,6 +4,10 @@ const StateContext = createContext({
     currentUser: {},
     userToken: null,
     books: [],
+    toast: {
+        message: null,
+        show: false
+    },
     setCurrentUser: () => {},
     setUserToken: () => {}
 });
@@ -52,6 +56,7 @@ export const ContextProvider = ({children}) => {
     const [currentUser, setCurrentUser] = useState({})
     const [userToken, _setUserToken] = useState(localStorage.getItem('TOKEN') || '')
     const [books, setBooks] = useState(tmpBooks)
+    const [toast, setToast] = useState({message: '', show: false})
 
     const setUserToken = (token) => {
         if (token) {
@@ -62,13 +67,22 @@ export const ContextProvider = ({children}) => {
         _setUserToken(token)
     }
 
+    const showToast = (message) => {
+        setToast({message, show: true})
+        setTimeout(() => {
+            setToast({message: '', show: false})
+        }, 3000)
+    }
+
     return (
         <StateContext.Provider value={{ 
             currentUser,
             setCurrentUser,
             userToken,
             setUserToken,
-            books
+            books,
+            toast,
+            showToast,
         }}>
             {children}
         </StateContext.Provider>

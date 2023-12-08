@@ -22,7 +22,6 @@ class BooksResource extends JsonResource
             'description' => $this->description,
             'tanggal_terbit' => $this->tanggal_terbit,
             'stock' => $this->stock,
-            'img' => $this->img,
             'img_url' => $this->img ? URL::to($this->img) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

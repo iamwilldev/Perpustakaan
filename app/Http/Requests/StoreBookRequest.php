@@ -4,15 +4,26 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BooksUpdateRequest extends FormRequest
+class StoreBookRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        // $buku = $this->route('/buku');
         return true;
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'name' => $this->name,
+            'description' => $this->description,
+            'penerbit' => $this->penerbit,
+            'tanggal_terbit' => $this->tanggal_terbit,
+            'stock' => $this->stock,
+            'img' => $this->img,
+        ]);
     }
 
     /**

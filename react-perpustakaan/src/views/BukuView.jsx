@@ -4,11 +4,13 @@ import { PhotoIcon } from '@heroicons/react/24/solid';
 import { Input } from 'postcss';
 import TButton from '../components/core/TButton';
 import axiosClient from '../axios.js';
-import { useNavigate, useParams } from 'react-router-dom';
+import { isRouteErrorResponse, useNavigate, useParams } from 'react-router-dom';
 
 export default function BukuView() {
     const navigate = useNavigate();
     const {id} = useParams()
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('');
     const [books, setBooks] = useState({
         name: '',
         description: '',
@@ -16,11 +18,8 @@ export default function BukuView() {
         tanggal_terbit: '',
         stock: '',
         img: null,
-        img_url: ''
+        img_url: null
     });
-    const [loading, setLoading] = useState(false)
-
-    const [error, setError] = useState('');
 
     const onImageChoose = (ev) => {
         const file = ev.target.files[0];
@@ -47,36 +46,37 @@ export default function BukuView() {
         delete payload.img_url;
 
         let res = null;
-        if (id) {
+        if(id) {
             res = axiosClient.put(`/buku/${id}`, payload)
         } else {
             res = axiosClient.post('/buku', payload)
         }
 
-        res
-        .then((res) => {
-            navigate('/buku')
+        res.then((res) => {
+            navigate('/buku');
         })
         .catch((err) => {
             if (err && err.response) {
                 setError(err.response.data.message)
             }
-        });
+        })
     }
 
     useEffect(() => {
         if (id) {
             setLoading(true)
             axiosClient.get(`/buku/${id}`)
-            .then(({data}) => {
-                setBooks(data.data);
-                setLoading(false)
-            })
-            .catch(err => {
-                console.error(err);
-            });
+                .then(({data}) => {
+                    setBooks(data.data)
+                    setLoading(false)
+                })
+                .catch((err) => {
+                    if (isRouteErrorResponse(err)) {
+                        navigate('/buku')
+                    }
+                })
         }
-    }, [id])
+    }, [])
 
     return (
         <PageComponent title={!id ? 'Tambah Buku Baru' : 'Update Buku'}>

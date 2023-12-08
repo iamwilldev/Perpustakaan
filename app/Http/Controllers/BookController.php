@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\BooksStoreRequest;
-use App\Http\Requests\BooksUpdateRequest;
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BooksResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 
-class BooksController extends Controller
+class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,9 +24,17 @@ class BooksController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
-    public function store(BooksStoreRequest $request)
+    public function store(StoreBookRequest $request)
     {
         $data = $request->validated();
 
@@ -46,16 +54,24 @@ class BooksController extends Controller
      */
     public function show(Book $book, Request $request)
     {
-        $id = $request->route('buku');
-        $book = Book::find($id);
+        $book = Book::find($request->route('buku'));
         return new BooksResource($book);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Book $book)
+    {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(BooksUpdateRequest $request, Book $book)
+    public function update(UpdateBookRequest $request, Book $book)
     {
+        $book = Book::find($request->route('buku'));
         $data = $request->validated();
 
         // check if image was given and save on local file system
@@ -70,7 +86,6 @@ class BooksController extends Controller
         }
 
         $book->update($data);
-
         return new BooksResource($book);
     }
 
@@ -79,6 +94,7 @@ class BooksController extends Controller
      */
     public function destroy(Book $book, Request $request)
     {
+        $book = Book::find($request->route('buku'));
         if ($book->img) {
             $absolutePath = public_path($book->img);
             File::delete($absolutePath);

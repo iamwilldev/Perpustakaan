@@ -42,7 +42,7 @@ export default function BooksList({books, onDeleteClick}) {
                     </TButton>
 
                     {books.id && (
-                        <TButton onClick={onDeleteClick} circle link color='red'>
+                        <TButton onClick={ev => onDeleteClick(books.id)} circle link color='red'>
                             <TrashIcon className='w-5 h-5' />
                         </TButton>
                     )}

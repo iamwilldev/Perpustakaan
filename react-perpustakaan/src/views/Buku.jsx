@@ -6,14 +6,21 @@ import { useStateContext } from "../context/ContextProvider";
 import { useEffect, useState } from "react";
 import axiosClient from "../axios";
 import PaginationLinks from "../components/PaginationLinks";
+import router from "../router";
 
 export default function Buku() {
+    const {showToast} = useStateContext();
     const [books, setBooks] = useState([]);
     const [meta, setMeta] = useState({});
     const [loading, setLoading] = useState(false)
 
-    const onDeleteClick = () => {
-        console.log('On Delete')
+    const onDeleteClick = (id) => {
+        if (window.confirm('Are you sure you want delete this book?')) {
+            axiosClient.delete(`/buku/${id}`).then(() => {
+                getBooks()
+                showToast('Buku berhasil dihapus')
+            })
+        }
     }
 
     const onPageClick = (link) => {
@@ -44,13 +51,14 @@ export default function Buku() {
             { loading && <div className="text-center text-lg"> Loading... </div>}
             { !loading && (
                 <div>
+                    {books.length === 0 && <div className="py-8 text-center text-gray-700">Tidak ada buku tersimpan</div>}
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
                         {books.map(books => (
                             <BooksList books={books} key={books.id} onDeleteClick={onDeleteClick}/>
                         ))}
                     </div>
 
-                    <PaginationLinks meta={meta} onPageClick={onPageClick}/>
+                    {books.length > 0 && <PaginationLinks meta={meta} onPageClick={onPageClick}/>}
                 </div>
             )}
         </PageComponent>
