@@ -1,23 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PageComponent from '../components/PageComponent'
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import { Input } from 'postcss';
 import TButton from '../components/core/TButton';
 import axiosClient from '../axios.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function BukuView() {
     const navigate = useNavigate();
-
+    const {id} = useParams()
     const [books, setBooks] = useState({
         name: '',
         description: '',
-        penerbit: '',	
+        penerbit: '',
         tanggal_terbit: '',
-        stock: 0,
+        stock: '',
         img: null,
-        img_url: null
+        img_url: ''
     });
+    const [loading, setLoading] = useState(false)
 
     const [error, setError] = useState('');
 
@@ -45,20 +46,42 @@ export default function BukuView() {
         }
         delete payload.img_url;
 
-        axiosClient.post('/buku', payload)
-        .then(res => {
-            console.log(res)
+        let res = null;
+        if (id) {
+            res = axiosClient.put(`/buku/${id}`, payload)
+        } else {
+            res = axiosClient.post('/buku', payload)
+        }
+
+        res
+        .then((res) => {
             navigate('/buku')
         })
-        .catch(err => {
+        .catch((err) => {
             if (err && err.response) {
                 setError(err.response.data.message)
             }
         });
     }
 
+    useEffect(() => {
+        if (id) {
+            setLoading(true)
+            axiosClient.get(`/buku/${id}`)
+            .then(({data}) => {
+                setBooks(data.data);
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        }
+    }, [id])
+
     return (
-        <PageComponent title='Tambah Buku Baru'>
+        <PageComponent title={!id ? 'Tambah Buku Baru' : 'Update Buku'}>
+            { loading && <div className="text-center text-lg"> Loading... </div>}
+            { !loading &&
             <form action="#" method="post" onSubmit={onSubmit}>
                 <div className='shadow sm:overflow-hidden sm:rounded-md'>
                     <div className='space-y-6 bg-white px-4 py-5 sm:p-6'>
@@ -191,6 +214,7 @@ export default function BukuView() {
                     </div>
                 </div>
             </form>
+            }
         </PageComponent>
     )
 }

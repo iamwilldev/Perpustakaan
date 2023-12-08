@@ -31,7 +31,7 @@ export default function BooksList({books, onDeleteClick}) {
                 <span className='text-gray-400'>Rp. 100.000</span>
             </div>
             <div className='flex justify-between items-center mt-3'>
-                <TButton to={`buku/${books.id}`}>
+                <TButton to={`/buku/${books.id}` }>
                     <PencilIcon className='w-5 h-5 mr-2'>
                         Edit
                     </PencilIcon>

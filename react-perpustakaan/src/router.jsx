@@ -31,6 +31,10 @@ const router = createBrowserRouter([
                 element: <BukuView />
             },
             {
+                path: '/buku/:id',
+                element: <BukuView />
+            },
+            {
                 path: '/users',
                 element: <Users />
             },

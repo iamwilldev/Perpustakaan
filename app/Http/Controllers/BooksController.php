@@ -17,7 +17,8 @@ class BooksController extends Controller
      */
     public function index(Request $request)
     {
-        $books = Book::paginate(10);
+        $books = Book::orderBy('created_at', 'desc')
+            ->paginate(9);
 
         return BooksResource::collection($books);
     }
@@ -45,6 +46,8 @@ class BooksController extends Controller
      */
     public function show(Book $book, Request $request)
     {
+        $id = $request->route('buku');
+        $book = Book::find($id);
         return new BooksResource($book);
     }
 
