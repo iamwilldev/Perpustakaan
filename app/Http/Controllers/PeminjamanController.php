@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePeminjamanRequest;
 use App\Http\Requests\UpdatePeminjamanRequest;
+use App\Http\Resources\PeminjamanResource;
 use App\Models\Peminjaman;
+use Illuminate\Http\Request;
 
 class PeminjamanController extends Controller
 {
@@ -13,7 +15,13 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        //
+        $peminjaman = Peminjaman::orderBy('created_at', 'desc')
+            ->whereNotIn('id', function ($query) {
+                $query->select('peminjaman_id')->from('pengembalians');
+            })
+            ->paginate(9);
+
+        return PeminjamanResource::collection($peminjaman);
     }
 
     /**
@@ -29,15 +37,19 @@ class PeminjamanController extends Controller
      */
     public function store(StorePeminjamanRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $peminjaman = Peminjaman::create($data);
+
+        return new PeminjamanResource($peminjaman);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Peminjaman $peminjaman)
+    public function show(Peminjaman $peminjaman, Request $request)
     {
-        //
+        return new PeminjamanResource($peminjaman);
     }
 
     /**
@@ -53,7 +65,11 @@ class PeminjamanController extends Controller
      */
     public function update(UpdatePeminjamanRequest $request, Peminjaman $peminjaman)
     {
-        //
+        $data = $request->validated();
+
+        $peminjaman->update($data);
+
+        return new PeminjamanResource($peminjaman);
     }
 
     /**
@@ -61,6 +77,8 @@ class PeminjamanController extends Controller
      */
     public function destroy(Peminjaman $peminjaman)
     {
-        //
+        $peminjaman->delete();
+
+        return response('', 204);
     }
 }

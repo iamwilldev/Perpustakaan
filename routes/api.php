@@ -21,10 +21,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
-    Route::apiResource('buku', BookController::class);
-    Route::apiResource('users', UserController::class);
-    Route::apiResource('peminjaman', PeminjamanController::class);
 });
+Route::apiResource('buku', BookController::class);
+Route::apiResource('users', UserController::class);
+Route::apiResource('peminjaman', PeminjamanController::class);
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
