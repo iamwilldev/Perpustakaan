@@ -14,6 +14,14 @@ class PeminjamanResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'book_id' => $this->book_id,
+            'user_id' => $this->user_id,
+            'tgl_pinjam' => $this->tgl_pinjam,
+            'tgl_kembali' => $this->tgl_kembali,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
     }
 }
