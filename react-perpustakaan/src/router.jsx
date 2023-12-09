@@ -8,6 +8,7 @@ import Peminjaman from "./views/Peminjaman.jsx";
 import AuthLayout from "./components/AuthLayout.jsx";
 import MainLayout from "./components/MainLayout.jsx";
 import BukuView from "./views/BukuView.jsx";
+import UsersView from "./views/UsersView.jsx";
 
 const router = createBrowserRouter([
     {
@@ -37,6 +38,15 @@ const router = createBrowserRouter([
             {
                 path: '/users',
                 element: <Users />
+            },
+            ,
+            {
+                path: '/users/create',
+                element: <UsersView />
+            },
+            {
+                path: '/users/:id',
+                element: <UsersView />
             },
             {
                 path: '/peminjaman',
