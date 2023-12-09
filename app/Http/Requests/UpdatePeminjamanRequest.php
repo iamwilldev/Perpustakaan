@@ -11,7 +11,8 @@ class UpdatePeminjamanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $peminjaman = $this->route('peminjaman');
+        return true;
     }
 
     /**
@@ -22,7 +23,10 @@ class UpdatePeminjamanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'buku_id' => 'required|integer',
+            'user_id' => 'required|integer',
+            'tanggal_pinjam' => 'required|date|after_or_equal:date',
+            'tanggal_kembali' => 'required|date|after:date',
         ];
     }
 }
