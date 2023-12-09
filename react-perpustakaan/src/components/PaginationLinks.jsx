@@ -41,25 +41,27 @@ export default function PaginationLinks({meta, onPageClick}) {
             </p>
             </div>
             <div>
-                <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                    
-                    {meta.links && meta.links.map((link, ind) => (
-                        <a
-                            href="#"
-                            key={ind}
-                            onClick={ev => onClick(ev, link)}
-                            aria-current="page"
-                            className={
-                                'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 hover:bg-gray-50 '
-                                + (ind === 0 ? ' rounded-l-md ' : '')
-                                + (ind === meta.links.length - 1 ? ' rounded-r-md ' : '')
-                                + (link.active ? ' border-indigo-500 bg-indigo-50 text-indigo-600' : 'border-gray-300 text-gray-500')
-                            }
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                        >
-                        </a>
-                    ))}
-                </nav>
+                {meta.totals > meta.per_page && 
+                    <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                        
+                        {meta.links && meta.links.map((link, ind) => (
+                            <a
+                                href="#"
+                                key={ind}
+                                onClick={ev => onClick(ev, link)}
+                                aria-current="page"
+                                className={
+                                    'relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 hover:bg-gray-50 '
+                                    + (ind === 0 ? ' rounded-l-md ' : '')
+                                    + (ind === meta.links.length - 1 ? ' rounded-r-md ' : '')
+                                    + (link.active ? ' border-indigo-500 bg-indigo-50 text-indigo-600' : 'border-gray-300 text-gray-500')
+                                }
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            >
+                            </a>
+                        ))}
+                    </nav>
+                }
             </div>
         </div>
         </div>

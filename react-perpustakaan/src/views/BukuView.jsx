@@ -5,8 +5,10 @@ import { Input } from 'postcss';
 import TButton from '../components/core/TButton';
 import axiosClient from '../axios.js';
 import { isRouteErrorResponse, useNavigate, useParams } from 'react-router-dom';
+import { useStateContext } from '../context/ContextProvider.jsx';
 
 export default function BukuView() {
+    const {showToast} = useStateContext();
     const navigate = useNavigate();
     const {id} = useParams()
     const [loading, setLoading] = useState(false)
@@ -46,7 +48,7 @@ export default function BukuView() {
         delete payload.img_url;
 
         let res = null;
-        if(id) {
+        if (id) {
             res = axiosClient.put(`/buku/${id}`, payload)
         } else {
             res = axiosClient.post('/buku', payload)
@@ -54,6 +56,11 @@ export default function BukuView() {
 
         res.then((res) => {
             navigate('/buku');
+            if (id) {
+                showToast('Buku berhasil diupdate')
+            } else {
+                showToast('Buku berhasil ditambahkan')
+            }
         })
         .catch((err) => {
             if (err && err.response) {
