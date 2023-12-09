@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::apiResource('buku', BookController::class);
     Route::apiResource('users', UserController::class);
+    Route::apiResource('peminjaman', PeminjamanController::class);
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);
