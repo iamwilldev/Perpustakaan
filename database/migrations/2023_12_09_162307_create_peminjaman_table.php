@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
+            $table->timestamps();
         });
     }
 
