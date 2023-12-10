@@ -10,5 +10,10 @@ class Peminjaman extends Model
     protected $table = 'peminjaman';
     use HasFactory;
 
-    protected $fillable = ['book_id', 'user_id', 'tgl_pinjam', 'tgl_kembali'];
+    protected $fillable = ['user_id'];
+
+    public function details()
+    {
+        return $this->hasMany(DetailPeminjaman::class);
+    }
 }

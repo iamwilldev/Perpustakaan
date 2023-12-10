@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePeminjamanRequest;
+use App\Http\Requests\StoreDetailPeminjamanRequest;
 use App\Http\Requests\UpdatePeminjamanRequest;
+use App\Http\Requests\UpdateDetailPeminjamanRequest;
 use App\Http\Resources\PeminjamanResource;
+use App\Http\Resources\DetailPeminjamanResource;
 use App\Models\Peminjaman;
+use App\Models\DetailPeminjaman;
 use Illuminate\Http\Request;
 
 class PeminjamanController extends Controller
@@ -15,13 +19,13 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        $peminjaman = Peminjaman::orderBy('created_at', 'desc')
-            ->whereNotIn('id', function ($query) {
-                $query->select('peminjaman_id')->from('pengembalians');
-            })
+        // tabel peminjaman : id, user_id
+        // tabel detail_peminjaman : id, peminjaman_id, books_id, tgl_peminjaman, tgl_pengembalian
+        $peminjamans = Peminjaman::with('details')
+            ->orderBy('created_at', 'desc')
             ->paginate(9);
 
-        return PeminjamanResource::collection($peminjaman);
+        return PeminjamanResource::collection($peminjamans);
     }
 
     /**
@@ -37,11 +41,6 @@ class PeminjamanController extends Controller
      */
     public function store(StorePeminjamanRequest $request)
     {
-        $data = $request->validated();
-
-        $peminjaman = Peminjaman::create($data);
-
-        return new PeminjamanResource($peminjaman);
     }
 
     /**
@@ -49,7 +48,6 @@ class PeminjamanController extends Controller
      */
     public function show(Peminjaman $peminjaman, Request $request)
     {
-        return new PeminjamanResource($peminjaman);
     }
 
     /**
@@ -65,20 +63,16 @@ class PeminjamanController extends Controller
      */
     public function update(UpdatePeminjamanRequest $request, Peminjaman $peminjaman)
     {
-        $data = $request->validated();
-
-        $peminjaman->update($data);
-
-        return new PeminjamanResource($peminjaman);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Peminjaman $peminjaman)
+    public function destroy(Peminjaman $peminjaman, Request $request)
     {
         $peminjaman->delete();
 
+        DetailPeminjaman::where('peminjaman_id', $peminjaman->id)->delete();
         return response('', 204);
     }
 }

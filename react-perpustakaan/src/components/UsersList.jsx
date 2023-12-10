@@ -56,7 +56,6 @@ export default function UsersList() {
         getUsers()
     }, [])
 
-
   return (
     <Card className="h-full w-full">
       <CardBody className="overflow-scroll px-0">
@@ -75,8 +74,68 @@ export default function UsersList() {
                     No.
                   </Typography>
                 </th>
+                <th
+                  key="nama"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Nama
+                  </Typography>
+                </th>
+                <th
+                  key="alamat"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Alamat
+                  </Typography>
+                </th>
+                <th
+                  key="telp"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    No Handphone
+                  </Typography>
+                </th>
+                <th
+                  key="nim"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Nim
+                  </Typography>
+                </th>
+                <th
+                  key="email"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Email
+                  </Typography>
+                </th>
 
-              {users && users.length > 0 && Object.keys(users[0]).slice(1, -2).map((attribute) => (
+              {/* {users && users.length > 0 && Object.keys(users[0]).slice(1, -2).map((attribute) => (
                 <th
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                 >
@@ -88,7 +147,7 @@ export default function UsersList() {
                     {attribute}
                   </Typography>
                 </th>
-              ))}
+              ))} */}
               <th
                   key="action"
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"

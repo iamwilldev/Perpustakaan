@@ -1,8 +1,28 @@
 import { Bars3Icon, BellIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import { ArrowTopRightOnSquareIcon, CalendarDaysIcon, ChartBarIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import TButton from './core/TButton'
+import { useEffect, useState } from 'react';
+import axiosClient from '../axios';
 
 export default function BooksList({books, onDeleteClick}) {
+    const [peminjaman, setPeminjaman] = useState([]);
+    const [loading, setLoading] = useState(false)
+    const globalBooksIdCounts = {};
+
+    const getPeminjaman = (url)  => {
+        url = url || '/peminjaman'
+        setLoading(true)
+        axiosClient.get(url)
+            .then(({data}) => {
+                setPeminjaman(data.data)
+                setLoading(false)
+            })
+    }
+
+    useEffect(() => {
+        getPeminjaman()
+    }, [])
+
     return (
         <div className='flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]'>
             <img
@@ -26,9 +46,22 @@ export default function BooksList({books, onDeleteClick}) {
             <div className='flex justify-between items-center mt-4'>
                 <div className='flex items-center'>
                     <ChartBarIcon className='w-5 h-5 mr-2' />
-                    <span className='text-gray-400'>{books.stock}</span>
+                    <span className='text-gray-400'>
+                        {peminjaman.map((peminjamanItem) => {
+                            const localBooksIdCounts = {};
+
+                            peminjamanItem.detail_peminjaman.forEach((detail) => {
+                                const booksId = detail['books_id'];
+                                localBooksIdCounts[booksId] = (localBooksIdCounts[booksId] || 0) + 1;
+                                globalBooksIdCounts[booksId] = (globalBooksIdCounts[booksId] || 0) + 1;
+                            });
+
+                        })}
+                        {books.stock - (globalBooksIdCounts[books.id] || 0)}
+                            
+                    </span>
                 </div>
-                <span className='text-gray-400'>Rp. 100.000</span>
+                <span className='text-gray-400'>Rp. 500/hari</span>
             </div>
             <div className='flex justify-between items-center mt-3'>
                 <TButton to={`/buku/${books.id}` }>

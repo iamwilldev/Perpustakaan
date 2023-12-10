@@ -4,13 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePeminjamanRequest extends FormRequest
+class UpdateDetailPeminjamanRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
+        $peminjaman = $this->route('peminjaman');
         return true;
     }
 
@@ -22,9 +23,10 @@ class StorePeminjamanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
-            'detail_peminjaman' => 'required|array',
-            'detail_peminjaman.*.book_id' => 'required|integer',
+            'peminjaman_id' => 'required|integer',
+            'book_id' => 'required|integer',
+            'tanggal_pinjam' => 'required|date|after_or_equal:date',
+            'tanggal_kembali' => 'required|date|after:date',
         ];
     }
 }
