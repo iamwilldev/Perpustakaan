@@ -47,7 +47,7 @@ export default function BooksList({books, onDeleteClick}) {
                 <div className='flex items-center'>
                     <ChartBarIcon className='w-5 h-5 mr-2' />
                     <span className='text-gray-400'>
-                        {peminjaman.map((peminjamanItem) => {
+                        {/* {peminjaman.map((peminjamanItem) => {
                             const localBooksIdCounts = {};
 
                             peminjamanItem.detail_peminjaman.forEach((detail) => {
@@ -56,7 +56,7 @@ export default function BooksList({books, onDeleteClick}) {
                                 globalBooksIdCounts[booksId] = (globalBooksIdCounts[booksId] || 0) + 1;
                             });
 
-                        })}
+                        })} */}
                         {books.stock - (globalBooksIdCounts[books.id] || 0)}
                             
                     </span>

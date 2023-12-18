@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Peminjaman extends Model
 {
-    protected $table = 'peminjaman';
     use HasFactory;
+    public $table = 'peminjaman';
 
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id', 'tgl_pinjam', 'tgl_kembali'];
 
-    public function details()
+    public function peminjamanDetails()
     {
-        return $this->hasMany(DetailPeminjaman::class);
+        return $this->hasMany(PeminjamanDetail::class, 'peminjaman_id');
     }
 }

@@ -15,9 +15,15 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::whereNull('password')
-            ->orderBy('created_at', 'desc')
-            ->paginate(9);
+        if (request()->has('all') && request('all') === 'true') {
+            $users = User::whereNull('password')
+                ->orderBy('name', 'asc')
+                ->get();
+        } else {
+            $users = User::whereNull('password')
+                ->orderBy('created_at', 'desc')
+                ->paginate(9);
+        }
 
         return UserResource::collection($users);
     }

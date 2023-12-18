@@ -34,9 +34,9 @@ export default function UsersView() {
       res.then((res) => {
           navigate('/users');
           if (id) {
-              showToast('User berhasil diupdate')
+              showToast('Peminjam berhasil diupdate')
           } else {
-              showToast('User berhasil ditambahkan')
+              showToast('Peminjam berhasil ditambahkan')
           }
       })
       .catch((err) => {
@@ -64,7 +64,7 @@ export default function UsersView() {
   }, [])
 
   return (
-    <PageComponent title={!id ? 'Tambah User Baru' : 'Update User'}>
+    <PageComponent title={!id ? 'Tambah Peminjam Baru' : 'Update Peminjam'}>
       { loading && <div className="text-center text-lg"> Loading... </div>}
       { !loading &&
       <form action="#" method="post" onSubmit={onSubmit}>
@@ -78,7 +78,7 @@ export default function UsersView() {
                   
                   {/* name */}
                   <div>
-                      <label htmlFor="nameuser" className='block text-sm font-medium text-gray-700'>Nama user</label>
+                      <label htmlFor="nameuser" className='block text-sm font-medium text-gray-700'>Nama peminjam</label>
                       <input
                           type="text"
                           name="name"
@@ -90,7 +90,7 @@ export default function UsersView() {
                                   name: ev.target.value
                               })
                           }
-                          placeholder='Nama User'
+                          placeholder='Nama Peminjam'
                           className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-50 focus:ring-indigo-500 sm:text-sm'
                       />
                   </div>

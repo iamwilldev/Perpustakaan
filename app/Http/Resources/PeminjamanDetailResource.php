@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailPeminjamanResource extends JsonResource
+class PeminjamanDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,7 @@ class DetailPeminjamanResource extends JsonResource
         return [
             'id' => $this->id,
             'peminjaman_id' => $this->peminjaman_id,
-            'books_id' => $this->books_id,
-            'tgl_peminjaman' => $this->tgl_peminjaman,
-            'tgl_kembali' => $this->tgl_kembali,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'book_id' => $this->book_id,
         ];
     }
 }

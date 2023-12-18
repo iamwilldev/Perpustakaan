@@ -42,15 +42,15 @@ export default function Users() {
     }, [])
 
     return (
-        <PageComponent title="Users" buttons={(
+        <PageComponent title="Peminjam" buttons={(
             <TButton color="green" to="/users/create">
-                <PlusCircleIcon className="h-6 w-6 mr-2" /> Tambah User
+                <PlusCircleIcon className="h-6 w-6 mr-2" /> Tambah Peminjam
             </TButton>
         )}>
             { loading && <div className="text-center text-lg"> Loading... </div>}
             { !loading && (
                 <div>
-                    {users.length === 0 && <div className="py-8 text-center text-gray-700">Tidak ada user tersimpan</div>}
+                    {users.length === 0 && <div className="py-8 text-center text-gray-700">Tidak ada peminjam tersimpan</div>}
                     {users.length >= 1 && 
                         <div className="px-8">
                             <UsersList users={users} key={users.id}/>

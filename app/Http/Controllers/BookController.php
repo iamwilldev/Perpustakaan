@@ -17,8 +17,13 @@ class BookController extends Controller
      */
     public function index(Request $request)
     {
-        $books = Book::orderBy('created_at', 'desc')
-            ->paginate(9);
+        if (request()->has('all') && request('all') === 'true') {
+            $books = Book::orderBy('name', 'asc')
+                ->get();
+        } else {
+            $books = Book::orderBy('created_at', 'desc')
+                ->paginate(9);
+        }
 
         return BooksResource::collection($books);
     }

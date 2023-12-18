@@ -26,33 +26,20 @@ export default function PeminjamanList() {
   const {showToast} = useStateContext();
   const [peminjaman, setPeminjaman] = useState([]);
   const [books, setBooks] = useState([]);
-  const [users, setUsers] = useState([]);
   const [meta, setMeta] = useState({});
   const [loading, setLoading] = useState(false)
 
   const onDeleteClick = (id) => {
-      if (window.confirm('Are you sure you want delete this peminjaman?')) {
-          // hapus data peminjaman dan detail peminjaman
-          axiosClient.delete(`/peminjaman/${id}`).then(() => {
-              getPeminjaman()
-              showToast('Peminjaman berhasil dihapus')
-          })
-      }
-  }
-  
-  const onPageClick = (link) => {
-        getPeminjaman(link.url)
+        if (window.confirm('Are you sure you want delete this peminjaman?')) {
+            axiosClient.delete(`/peminjaman/${id}`).then(() => {
+                getPeminjaman()
+                showToast('Peminjaman berhasil dihapus')
+            })
+        }
     }
 
-  const getPeminjaman = (url)  => {
-      url = url || '/peminjaman'
-      setLoading(true)
-      axiosClient.get(url)
-          .then(({data}) => {
-              setPeminjaman(data.data)
-              setMeta(data.meta)
-              setLoading(false)
-          })
+  const onPageClick = (link) => {
+      getPeminjaman(link.url)
   }
 
   const getBooks = (url)  => {
@@ -61,45 +48,25 @@ export default function PeminjamanList() {
         axiosClient.get(url)
             .then(({data}) => {
                 setBooks(data.data)
+                setMeta(data.meta)
                 setLoading(false)
             })
     }
 
-  const getUsers = async (url = '/users') => {
-    setLoading(true);
-
-    try {
-      let currentPage = 1;
-      let allUsers = [];
-
-      while (true) {
-        const response = await axiosClient.get(`${url}?page=${currentPage}`);
-        const { data } = response;
-
-        const newUsers = data.data;
-        allUsers = [...allUsers, ...newUsers];
-
-        if (
-          data.meta.current_page < data.meta.last_page
-        ) {
-          currentPage++;
-        } else {
-          // All pages have been fetched
-          setUsers(allUsers);
-          setLoading(false);
-          break;
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      setLoading(false);
+    const getPeminjaman = (url)  => {
+        url = url || '/peminjaman'
+        setLoading(true)
+        axiosClient.get(url)
+            .then(({data}) => {
+                setPeminjaman(data.data)
+                setMeta(data.meta)
+                setLoading(false)
+            })
     }
-  };
 
-  useEffect(() => {
+    useEffect(() => {
         getPeminjaman()
         getBooks()
-        getUsers()
     }, [])
 
   return (
@@ -144,21 +111,54 @@ export default function PeminjamanList() {
                   Buku yang dipinjam
                 </Typography>
               </th>
-              {/* </th>
-
-              {peminjaman && peminjaman.length > 0 && Object.keys(peminjaman[0]).slice(1, -2).map((attribute) => (
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+              <th
+                key="tgl_pinjam"
+                className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+              >
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
                 >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    {attribute}
-                  </Typography>
-                </th>
-              ))} */}
+                  Tanggal Peminjaman
+                </Typography>
+              </th>
+              <th
+                key="tgl_kembali"
+                className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+              >
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Tanggal Pengembalian
+                </Typography>
+              </th>
+              <th
+                key="sisa hari"
+                className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+              >
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Sisa Hari
+                </Typography>
+              </th>
+              <th
+                key="denda"
+                className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+              >
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
+                  Denda
+                </Typography>
+              </th>
               <th
                   key="action"
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -174,12 +174,9 @@ export default function PeminjamanList() {
             </tr>
           </thead>
           <tbody>
-            {peminjaman.map((attribute, index) =>{
+            {peminjaman.map((item, index) => {
               const isLast = index === peminjaman.length - 1;
               const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
-              // find user
-              const user = users.find((user) => user.id === attribute.user_id);
  
               return (
                 <tr>
@@ -198,7 +195,7 @@ export default function PeminjamanList() {
                       color="blue-gray"
                       className="font-bold"
                     >
-                      {user ? user.name : 'Unknown User'}
+                      {peminjaman[index].peminjam.name} [{peminjaman[index].peminjam.nim}]
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -207,32 +204,61 @@ export default function PeminjamanList() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {peminjaman[index].detail_peminjaman.map((detail, detailIndex) => {
-      
-                        const book = books.find((book) => book.id === detail.books_id);
+                      {peminjaman[index].details.map((detail, index) => {
+                        const bookId = detail.book_id;
+                        const bookIndex = books.findIndex((book) => book.id === bookId);
+                        const bookName = bookIndex !== -1 ? books[bookIndex].name : 'Book not found';
 
                         return (
-                          <ul role="list" className="divide-y divide-gray-100" key={detailIndex}>
-                            <li key={detail.id} className="flex flex-col sm:flex-row justify-between gap-x-6 py-5">
-                              <div className="flex min-w-0 gap-x-4">
-                                <img
-                                  className="h-12 w-12 flex-none bg-gray-50"
-                                  src={book ? book.img_url : 'https://images.unsplash.com/photo-1612837017953-4b6b7a3f0b0f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVrdSUyMGJvb2slMjBzdG9ja3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80'}
-                                  alt=""
-                                />
-                                <div className="min-w-0 flex-auto">
-                                  <p className="text-sm font-semibold leading-6 text-gray-900">{book ? book.name : 'Unknown Book'}</p>
-                                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">{book ? book.penerbit : 'Unknown Penerbit'}</p>
-                                </div>
-                              </div>
-                              <div className="mt-4 sm:mt-0 sm:flex sm:flex-col sm:items-end">
-                                <p className="text-xs leading-5 text-gray-500">Tanggal Pengembalian: {detail.tgl_kembali}</p>
-                                <p className="mt-1 text-xs leading-5 text-gray-500">Tanggal Peminjaman: {detail.tgl_peminjaman}</p>
-                              </div>
-                            </li>
-                          </ul>
+                          <div className='flex items-center' key={index}>
+                            <span className='text-gray-400'>
+                              {index + 1}. {bookName}
+                            </span>
+                          </div>
                         );
                       })}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                    >
+                      {new Date(peminjaman[index].tgl_pinjam).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                    >
+                      {new Date(peminjaman[index].tgl_kembali).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color={new Date() > new Date(peminjaman[index].tgl_kembali) ? "red" : "blue-gray"}
+                    >
+                      {new Date() > new Date(peminjaman[index].tgl_kembali)
+                        ? `-${Math.abs(Math.ceil((new Date(peminjaman[index].tgl_kembali) - new Date()) / (1000 * 60 * 60 * 24)))} Hari`
+                        : `${Math.ceil((new Date(peminjaman[index].tgl_kembali) - new Date()) / (1000 * 60 * 60 * 24))} Hari`}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                    >
+                      {Math.ceil((new Date(peminjaman[index].tgl_kembali) - new Date()) / (1000 * 60 * 60 * 24)) > 0 ? 'Rp. 0' : `Rp. ${Math.ceil((new Date(peminjaman[index].tgl_kembali) - new Date()) / (1000 * 60 * 60 * 24)) * 1000}`}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -256,7 +282,7 @@ export default function PeminjamanList() {
         </table>
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-        {peminjaman.length > 0 && <PaginationLinks meta={meta} onPageClick={onPageClick}/>}
+        {peminjaman && peminjaman.length > 0 && <PaginationLinks meta={meta} onPageClick={onPageClick}/>}
       </CardFooter>
     </Card>
   );

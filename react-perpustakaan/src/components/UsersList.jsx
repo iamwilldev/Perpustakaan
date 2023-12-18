@@ -32,7 +32,7 @@ export default function UsersList() {
       if (window.confirm('Are you sure you want delete this user?')) {
           axiosClient.delete(`/users/${id}`).then(() => {
               getUsers()
-              showToast('User berhasil dihapus')
+              showToast('Peminjam berhasil dihapus')
           })
       }
   }

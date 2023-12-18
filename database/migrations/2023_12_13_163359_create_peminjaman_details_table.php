@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_peminjaman', function (Blueprint $table) {
+        Schema::create('peminjaman_details', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('peminjaman_id')->unsigned();
-            $table->integer('books_id')->unsigned();
-            $table->date('tgl_peminjaman');
-            $table->date('tgl_kembali');
+            $table->integer('book_id')->unsigned();
             $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
-            $table->foreign('books_id')->references('id')->on('books')->onDelete('cascade');
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_peminjaman');
+        Schema::dropIfExists('peminjaman_details');
     }
 };

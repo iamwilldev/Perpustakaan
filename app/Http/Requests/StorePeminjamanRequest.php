@@ -14,6 +14,13 @@ class StorePeminjamanRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' => $this->user_id,
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,9 +29,10 @@ class StorePeminjamanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
-            'detail_peminjaman' => 'required|array',
-            'detail_peminjaman.*.book_id' => 'required|integer',
+            'user_id' => 'exists:users,id',
+            'tgl_pinjam' => 'required|date|after_or_equal:today',
+            'tgl_kembali' => 'required|date|after:today',
+            'details' => 'array',
         ];
     }
 }

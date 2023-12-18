@@ -9,8 +9,9 @@ import Toast from './Toast'
 const navigation = [
     { name: 'Dashboard', to: '/'},
     { name: 'Buku', to: '/buku'},
-    { name: 'Users', to: '/users'},
+    { name: 'Peminjam', to: '/users'},
     { name: 'Peminjaman', to: '/peminjaman'},
+    { name: 'Pengembalian', to: '/pengembalian'},
 ]
 
 function classNames(...classes) {
