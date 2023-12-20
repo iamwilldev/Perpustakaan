@@ -11,7 +11,6 @@ const navigation = [
     { name: 'Buku', to: '/buku'},
     { name: 'Peminjam', to: '/users'},
     { name: 'Peminjaman', to: '/peminjaman'},
-    { name: 'Pengembalian', to: '/pengembalian'},
 ]
 
 function classNames(...classes) {
